@@ -1,0 +1,21 @@
+# This file is used for testing by exposing the port to host, making the service
+# reachable without going through the proxy. Once the testing is done, the line
+# exposing the port should be removed to ensure all traffic goes through the proxy.
+version: '2'
+services:
+    mysql-jira:
+       build: mysql
+       container_name: mysql-jira
+       volumes:
+         - /opt/data
+       hostname: mysql-jira
+       restart: unless-stopped
+    jira-fgh:
+       build: jira
+       ports:
+         - "80:8080"
+       container_name: jira-fgh
+       depends_on:
+         - mysql-jira
+       hostname: jira-fgh
+       restart: unless-stopped
